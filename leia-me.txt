@@ -1,0 +1,3 @@
+Editar o arquivo "info.tex" para alterar as informações relevantes, conforme estão descritas lá.
+
+A estrutura do documento pode ser alterada editando-se o arquivo "principal.tex".

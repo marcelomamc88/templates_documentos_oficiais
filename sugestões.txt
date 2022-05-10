@@ -1,0 +1,1 @@
+1. Eventualmente, criar uma função que, após a troca de uma flag (por exemplo, a publicação efetiva do documento), a data do documento ficar travada para a data da troca da flag e, enquanto a flag tiver o valor inicial, a variável com a data da publicação pode ser sempre a variável \today

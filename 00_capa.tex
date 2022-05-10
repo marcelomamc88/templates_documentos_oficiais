@@ -1,0 +1,51 @@
+% Capa
+%\imprimircapa
+
+
+
+\begin{center}
+
+
+
+{
+
+    \setlength{\fboxsep}{0pt}
+    \setlength{\fboxrule}{0pt}
+    \framebox(\textwidth,7cm)[b]{
+    \centering
+    \begin{tabular}{b{\textwidth}}
+        
+        \centering
+        \large \textbf{\MakeUppercase{\imprimirinstituicao}}
+        \\\vspace{-.25\baselineskip}
+        \large \textbf{\MakeUppercase{\organizacaoMD}}
+        \\\vspace{-.25\baselineskip}
+        CENTRO DE COMPUTAÇÃO DA AERONÁUTICA DE BRASÍLIA
+    \end{tabular}}
+}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.8]{figuras/Brasao_FAB.png}
+\end{figure}
+
+\\[1cm]
+
+
+{\Large \assuntobasico}\\[2cm]
+
+\\
+% RÉGUA PARA TESTES DE COMPRIMENTO
+\ruler{rightup}{10cm}
+\framebox(10cm,5cm){
+    \centering
+    \begin{tblr}[t]{colspec={M{9cm}},row{1}={1.5cm}, row{2}={2.5cm}, row{3}={0.5cm}}
+        \footnotesize \textcolor{red}{\textbf{\tipodocumento \hspace{} \numerodocumento}}
+        \\
+        \footnotesize \textcolor{red}{\textbf{\imprimirtitulo}}
+        \\
+        \footnotesize \textcolor{red}{\textbf{\anopublicacao}}
+        \\
+    \end{tblr}
+}
+\end{center}

@@ -1,0 +1,45 @@
+% Informações de dados para CAPA e FOLHA DE ROSTO
+
+\titulo{Nome completo do documento}
+\autor{Nome do Autor}
+\local{Brasília}
+\data{\today}
+
+\instituicao{Ministério da Defesa}
+
+
+\def \assuntobasico{\textcolor{red}{Nome do Tema}} % Nome do tema para o qual o documento se propõe a falar 
+\def \organizacaoMD{Comando da Aeronáutica} % Nome da Organização dentro do Ministério da Defesa responsável pelo documento (Neste caso, o COMAER)
+\def \organizacaoredatora{NOME DA OM} % Nome da OM responsável pela publicação deste documento
+\def \tipodocumento{NOME DO TIPO DE DOCUMENTO} % Nome do tipo de documento (ICA, NSCA, DCA, ...)
+\def \tipodocumentoporextenso{NOME DO TIPO DE DOCUMENTO POR EXTENSO} % Nome por extenso do tipo de documento descrito acima
+\def \numerodocumento{Nº DO DOCUMENTO} % Número do documento publicado em questão
+\def \anopublicacao{ANO DE PUBLICAÇÃO} % Ano da publicação deste documento
+\def \portariapublicacao{Nº PORTARIA PUBLICAÇÃO} % Número da Portaria onde a publicação foi feita
+\def \autoridadeassinante{CARGO DA AUTORIDADE ASSINANTE} % Cargo da autoridade máxima da OM redatora
+\def \postoautoridadeassinante{POSTO DA AUTORIDADE ASSINANTE ESCRITO EM ABREVIAÇÃO} % Posto da autoridade máxima da OM redatora
+\def \nomeautoridadeassinante{NOME COMPLETO COM O NOME DE GUERRA CAPITALIZADO DA AUTORIDADE ASSINANTE} % Nome completo com o nome de guerra capitalizado da autoridade máxima da OM redatora
+\def \numerobca{Nº DO BCA ONDE O DOCUMENTO FOI PUBLICADO} % Número do BCA onde o documento em questão foi publicado
+
+% Informações da data de aprovação
+\newcommand{\mes}{%
+  \ifcase\the\month
+  \or Janeiro% 1
+  \or Fevereiro% 2
+  \or Março% 3
+  \or Abril% 4
+  \or Maio% 5
+  \or Junho% 6
+  \or Julho% 7
+  \or Agosto% 8
+  \or Setembro% 9
+  \or Outubror% 10
+  \or Novembro% 11
+  \or Dezembro% 12
+  \fi
+}
+
+
+\def \diadeaprovacao{\the\day}
+\def \mesdeaprovacao{\mes}
+\def \anodeaprovacao{\the\year}

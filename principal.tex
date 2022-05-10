@@ -1,0 +1,54 @@
+% Modelo de Documentação Oficial da Força Aérea Brasileira
+% Agradecimentos a Danilo Gaspar, autor do template no qual este tem como base. Link para o template original
+% https://www.overleaf.com/latex/templates/template-unifei/fcrwrgzvhgmx
+
+\documentclass[
+% opções da classe memoir
+14pt,
+twoside,
+a4paper,
+oldfontcommands,
+% opções do pacote babel
+english,			% idioma adicional para hifenização
+brazil,				% o último idioma é o principal do documento
+shortlabels
+]{abntex2} 
+
+% O impacto do tamanho dos textos pelo tamanho padrão definido na fonte da classe memoir: https://www.sascha-frank.com/latex-font-size.html
+
+% configurações (pacotes, comandos)
+\input{config.tex}
+% informações (grande comando, tipo de documento, ano e meio de publicação,)
+\input{info.tex}
+
+% Configuração para que a família da fonte usada seja Time News Roman
+\usepackage{times}
+
+% Pacote que permite a colocação de uma régua na folha para verificar a medida
+\usepackage[type=none]{fgruler}
+\usepackage{tabularray}
+\NewColumnType{M}[1]{Q[m,c,#1]} 
+
+% Início do documento
+\begin{document}
+
+% Elementos pré-textuais
+% Capa
+\input{00_capa.tex}
+\input{01_contracapa.tex}
+
+
+\input{04_ato_de_aprovacao}
+
+\newpage
+
+% Elementos textuais
+\textual
+\pagestyle{fabstyle}
+
+% \input{04_requisitos}
+% \input{06_analise_comp_solucoes}
+
+\newpage
+% Fim do documento
+\end{document}
