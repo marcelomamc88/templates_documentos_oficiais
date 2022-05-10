@@ -651,7 +651,7 @@
     \else
       \@restonecolfalse
     \fi
-    \chapter*{\contentsname
+    \chapter*{\MakeUppercase{\contentsname}
         \pdfbookmark[0]{\namecontents}{contents}
         \@mkboth{\MakeUppercase{\contentsname}}%
                  {\MakeUppercase{\contentsname}}}       % Thanks to Reinaldo Fortes
