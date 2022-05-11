@@ -133,6 +133,30 @@
 \RequirePackage{longtable}
 \RequirePackage{array}
 \RequirePackage{tabularx}
+\RequirePackage{ragged2e} % PERMITE TEXTO JUSTIFICADO COM "\justifying"
+\RequirePackage{enumitem} %  ITEMIZE STYLE
+\RequirePackage{tocloft}    % TABLE OF CONTENTS SUMÁRIO
+
+%==============================================================================
+% PACOTES PARA A CENTRALIZAÇÃO DA ASSINATURA DA AUTORIDADE QUE APROVA
+\RequirePackage{varwidth}   
+\RequirePackage{titlecaps}   
+\Addlcwords{do da em na no de}  % PREPOSIÇÕES NÃO CAPITALIZÁVEIS
+%==============================================================================
+
+
+
+%==============================================================================
+% CRIAÇÃO DA TABELA ESTILO NA CAPA
+\RequirePackage{tabularray}
+\NewColumnType{M}[1]{Q[m,c,#1]}
+%==============================================================================
+% REMOVER APOS AJUSTE DA CAPA E FRONT DE ACORDO COM NSCA
+\RequirePackage{transparent} 
+\RequirePackage{eso-pic}
+%==============================================================================
+
+
 
 %==============================================================================
 %% opcoes de cores
@@ -162,7 +186,7 @@
 %==============================================================================
 
 \ifpdf
-  \RequirePackage{ae} %% fontes para pdf
+  \RequirePackage{mathptmx} %% FONTE TIMES NEW ROMAN
   \RequirePackage[pdftex]{graphicx}
   \RequirePackage[pdftex]{geometry}
 \else
@@ -172,7 +196,17 @@
 \fi
 
 % dimensoes das paginas
-\geometry{a4paper,left=3cm,right=2cm,top=3cm,bottom=2cm,verbose,headheight=0.56cm, headsep=0.5cm,footskip=3em}
+\geometry{
+    a4paper,    % PÁGINA A4 SEGUNDO NSCA 5-1/2011
+    twoside,
+    left=3cm,
+    right=2cm,
+    top=3cm,
+    bottom=2cm,
+    verbose,
+    headheight=2cm, 
+    footskip=3pt,
+    includehead=false}
 
 \newif\ifhyperref
 \@ifpackageloaded{hyperref}{\hyperreftrue}{\hyperreffalse}
@@ -208,20 +242,31 @@
 \date{\dayname}{\monthname}{\number\year}
 
 %==============================================================================
+%%% Novas Fontes
+%==============================================================================
+%--------------------------------{TAMANHO}{ESPAÇAMENTO}---------------------
+\newcommand{\FonteOnzeCapa}{\fontsize{11}{11}\selectfont}
+\newcommand{\FonteDozeCapa}{\fontsize{14.2}{14.2}\selectfont}
+\newcommand{\FonteDezesseteCapa}{\fontsize{16}{16}\selectfont}
+\newcommand{\FonteDezenoveCapa}{\fontsize{17.5}{17.5}\selectfont}
+\newcommand{\FonteCorpoDoze}{\fontsize{12}{12}\selectfont}
+
+
+%==============================================================================
 %%% Novos comandos: \author, \authoraddress, \advisor, \coadvisor,
 %%% \boss, etc ...  ;-)
 %==============================================================================
-% Comando - Fonte 17
+% Comando - Fonte 17 - \FonteDezesseteCapa
 \newcommand{\comando}[1]{
   \gdef\@comando{#1}
 }
 
-% Comando - Fonte 12
+% Comando - Fonte 12 - \FonteDozeCapa
 \newcommand{\omelaboradora}[1]{
   \gdef\@omelaboradora{#1}
 }
 
-% Assunto Básico - Fonte 19
+% Assunto Básico - Fonte 19 - \FonteDezenoveCapa
 \newcommand{\assuntobasico}[1]{
   \gdef\@assuntobasico{#1}
 }
@@ -246,7 +291,79 @@
   \gdef\@anoaprovacao{#1}
 }
 
+% Órgão Superior que aprovou a Legislação - Fonte 12 - \FonteCorpoDoze
+\newcommand{\orgaoaprovador}[1]{
+  \gdef\@orgaoaprovador{#1}
+}
 
+% Portaria ou outro ato de aprovação da Legislação - Fonte 12 - \FonteCorpoDoze
+\newcommand{\publicacaoDeAprovacao}[1]{
+  \gdef\@publicacaoDeAprovacao{#1}
+}
+
+% Número de Protocolo do Ato de Aprovação - Fonte 12 - \FonteCorpoDoze
+\newcommand{\nupAprovacao}[1]{
+  \gdef\@nupAprovacao{#1}
+}
+
+% Preâmbulo do Ato de Aprovação - Fonte 12 - \FonteCorpoDoze
+\newcommand{\preTxtAto}[1]{
+  \gdef\@preTxtAto{#1}
+}
+
+% Posto da autoridade que aprova - Fonte 12 - \FonteCorpoDoze
+\newcommand{\postoAutoridade}[1]{
+  \gdef\@postoAutoridade{#1}
+}
+
+% Nome da autoridade que aprova - Fonte 12 - \FonteCorpoDoze
+\newcommand{\nomeAutoridade}[1]{
+  \gdef\@nomeAutoridade{#1}
+}
+
+\RequirePackage{etoolbox}
+% Gênero da Autoridade que aprova para os artigos - Fonte 12 - \FonteCorpoDoze
+\newcommand{\generoAutoridade}[1]{
+  \gdef\@generoAutoridade
+    {\ifstrequal{#1}{m}{O}
+    {\ifstrequal{#1}{f}{A}
+    {\PackageError{generoAutoridade}{Gênero da autoridadenão definido corretamente}{}}}}
+}
+
+
+% Cargo da autoridade que aprova - Fonte 12 - \FonteCorpoDoze
+\newcommand{\cargoAutoridade}[1]{
+  \gdef\@cargoAutoridade{#1}
+}
+
+% Texto do ato de aprovação - Fonte 12 - \FonteCorpoDoze
+\newcommand{\txtAprovacao}[1]{
+  \gdef\@txtAprovacao{#1}
+}
+
+% Impressão de Artigos no texto de aprocação - Fonte 12 - \FonteCorpoDoze
+\newcommand{\artTxTAprova}[1]{
+  \gdef\@artTxTAprova{
+    \begin{enumerate}[leftmargin=0pt, %AONDE COMEÇA O BOX DO PARÁGRAFO
+                labelindent=10pt, %IDENT DO LABEL PARA TRÁS
+                labelwidth=10pt, %TAMANHO DO LABEL PARA TRÁS
+                labelsep=5pt, %SEPARAÇÃO LABEL DO TEXTO DO ITEM
+                itemindent=85pt, %IDENT DO TEXTO DO ITEM
+                parsep=5pt, %SEPARAÇÃO ENTRE PARAGRAFOS INTERNOS
+                itemsep=10pt, %SEPARAÇÃO ENTRE ITENS
+                listparindent=20pt, %ESPAÇO DE TAB DOS PARÁGRAFOS
+                font=Art\hspace{2pt},
+                label=\arabic*\textsuperscript{o}
+                ] 
+        #1
+    \end{enumerate}
+  }
+}
+
+% Data publicação ato de aprovação - Fonte 12 - \FonteCorpoDoze
+\newcommand{\dateAprovacao}[1]{
+  \gdef\@dateAprovacao{#1}
+}
 
 % Autor...
 \renewcommand{\author}[2]{%               % Nome, Sobrenome
@@ -336,10 +453,7 @@
       \makefrontispicio
       \makeatoaprovacao
    \end{titlepage}
-
-   \ifthenelse{\equal{\itaoptionlevel}{quali}}
-              {\setcounter{page}{2}}
-							{\setcounter{page}{4}}
+   \setcounter{page}{0}
 							
 }
 
@@ -351,38 +465,56 @@
   %================================================
   % CAPA
   %================================================
+  
+% IMAGEM DE REFERÊNCIA PARA AJUSTES DA CAPA. REMOVER APÓS OS AJUSTES CONFORME NSCA 5-1
+%\AddToShipoutPicture*{
+%    \put(0,0){
+%        \parbox[b][\paperheight]{\paperwidth}{%
+%            \vfill
+%            \centering
+%            {\transparent{.5}\hspace{-6pt}\includegraphics[\textwidth]{0_publicacoes_convencionais/_imagens/capa.png}}%
+%            \vfill
+%        }
+%    }
+%}
+
+  
   \center
-  \begin{spacing}{1}    
-    \MakeUppercase{\Large \textbf{\ministeriodefesa}}
-  \end{spacing}
+  \begin{minipage}[t][3.55cm][b]{\textwidth}
+    \centering
+    \MakeUppercase{\FonteDezesseteCapa \textbf{\ministeriodefesa}}
+    \\
+    \MakeUppercase{\FonteDezesseteCapa \textbf{\@comando}}  
+  \end{minipage}
+  
+    \vspace{2cm}   
 
-  \begin{spacing}{1}
-    \MakeUppercase{\Large \textbf{\@comando}}    
-    \\[2cm]
-  \end{spacing}
+  \begin{minipage}[t][5cm][c]{\textwidth}
+    \centering
+    \includegraphics[width=7cm]{_imagens/BRASAO_FAB.png}
+  \end{minipage}
 
-  \begin{spacing}{1}
-    \begin{figure}[h!]
-      \centering
-      \includegraphics[scale=0.8]{_imagens/Brasao_FAB.png}
-    \end{figure}
    
-  \end{spacing}
+  \begin{minipage}[t][3.26cm][c]{\textwidth}
+    \centering
+    \MakeUppercase{\FonteDezenoveCapa \textbf{\@assuntobasico}} 
+  \end{minipage}
 
-  \begin{spacing}{2}
-    \MakeUppercase{\Large \textbf{\@assuntobasico}} 
-    \\[1cm]   
-  \end{spacing}
-
-  \thispagestyle{empty}         		
-        \framebox(10cm,5cm){
-          \begin{minipage}{10cm}
-            \centering
-            \textbf{\@siglaespecie}\;\textbf{\@numerobasicosecundario} \\[1cm]
-            \textbf{\MakeUppercase{\@titulo}} \\[1cm]
-            \textbf{\@anoaprovacao}\\
-          \end{minipage}
-        }
+  \thispagestyle{empty} 
+  \framebox(10cm,5cm){
+    \centering
+    \begin{tblr}[t]{colspec={M{9cm}},row{1}={0.5cm}, row{2}={3.5cm}, row{3}={0.5cm}}
+        \FonteOnzeCapa 
+        \textbf{\@siglaespecie}\;\textbf{\@numerobasicosecundario}
+        \\
+        \FonteOnzeCapa 
+        \textbf{\MakeUppercase{\@titulo}}
+        \\
+        \FonteOnzeCapa 
+        \textbf{\@anoaprovacao}\\
+        \\
+    \end{tblr}
+  }
   \vfill
   
 }
@@ -392,39 +524,50 @@
 %============================================================================== 
 \newcommand{\makefrontispicio}{%
   \newpage
+  
+% IMAGEM DE REFERÊNCIA PARA AJUSTES DO FRONTISPÍCIO AJUSTES CONFORME NSCA 5-1
+%\AddToShipoutPicture*{\put(0,0){\parbox[b][\paperheight]{\paperwidth}{\vfill\centering
+%{\transparent{.5}\hspace{-14pt}\includegraphics[\textwidth]{0_publicacoes_convencionais/_imagens/frontspicio.png}}\vfill}}}
+
   \center
-  \begin{spacing}{1}    
-    \MakeUppercase{\Large \textbf{\ministeriodefesa}}
-  \end{spacing}
+  \begin{minipage}[t][3.5cm][b]{\textwidth}
+    \centering
+    \MakeUppercase{\FonteDezesseteCapa \textbf{\ministeriodefesa}}
+    \\
+    \MakeUppercase{\FonteDezesseteCapa \textbf{\@comando}} 
+  \end{minipage}
+  \\[3pt]
+  \begin{minipage}[t][1.67cm][t]{\textwidth}
+    \centering
+    \MakeUppercase{\FonteDozeCapa \@omelaboradora}
+  \end{minipage}
 
-  \begin{spacing}{1}
-    \MakeUppercase{\Large \textbf{\@comando}} \par   
-    \MakeUppercase{\small \textbf{\@omelaboradora}}    
-    \\[2cm]
-  \end{spacing}
 
-  \begin{spacing}{1}
-    \begin{figure}[h!]
-      \centering
-      \includegraphics[scale=0.8]{_imagens/Brasao_FAB.png}
-    \end{figure}
+  \begin{minipage}[t][5cm][c]{\textwidth}
+    \centering
+    \includegraphics[width=7cm]{_imagens/BRASAO_FAB.png}
+  \end{minipage}
    
-  \end{spacing}
-
-  \begin{spacing}{2}
-    \MakeUppercase{\Large \textbf{\@assuntobasico}} 
-    \\[1cm]   
-  \end{spacing}
+  \begin{minipage}[t][3.26cm][c]{\textwidth}
+    \centering
+    \MakeUppercase{\FonteDezenoveCapa \textbf{\@assuntobasico}} 
+  \end{minipage}
 
   \thispagestyle{empty}         		
-        \framebox(10cm,5cm){
-          \begin{minipage}{10cm}
-            \centering
-            \textbf{\@siglaespecie}\;\textbf{\@numerobasicosecundario} \\[1cm]
-            \textbf{\MakeUppercase{\@titulo}} \\[1cm]
-            \textbf{\@anoaprovacao}\\
-          \end{minipage}
-        }
+  \framebox(10cm,5cm){
+    \centering
+    \begin{tblr}[t]{colspec={M{9cm}},row{1}={0.5cm}, row{2}={3.5cm}, row{3}={0.5cm}}
+        \FonteOnzeCapa 
+        \textbf{\@siglaespecie}\;\textbf{\@numerobasicosecundario}
+        \\
+        \FonteOnzeCapa 
+        \textbf{\MakeUppercase{\@titulo}}
+        \\
+        \FonteOnzeCapa 
+        \textbf{\@anoaprovacao}\\
+        \\
+    \end{tblr}
+  }
   \vfill
   
  }
@@ -434,10 +577,64 @@
 %============================================================================== 
 \newcommand{\makeatoaprovacao}{%
   \newpage
-  \center
-  \begin{spacing}{1}    
-    \MakeUppercase{\Large \textbf{ATO DE APROVAÇÃO}}
-  \end{spacing}
+  \pagestyle{empty}
+% IMAGEM DE REFERÊNCIA PARA AJUSTES Do front. REMOVER APÓS OS AJUSTES CONFORME NSCA 5-1
+%\AddToShipoutPicture*{\put(-4,-1){\parbox[b][\paperheight]{\paperwidth}{\vfill\centering
+%{\transparent{.7}\includegraphics{0_publicacoes_convencionais/_imagens/ato_aprovacao.png}}\vfill}}}
+    
+    \begin{minipage}[t][4.3cm][t]{\textwidth}
+        \centering
+        \vspace{-1.4cm}
+        \includegraphics[scale=0.246]{0_publicacoes_convencionais/_imagens/BARSAO_REPUBLICA.png}
+        \\
+        \MakeUppercase{\FonteCorpoDoze \textbf{\ministeriodefesa}}
+        \\[-4pt]
+        \MakeUppercase{\FonteCorpoDoze \textbf{\@comando}} 
+        \\[-4pt]
+        \MakeUppercase{\FonteCorpoDoze \@orgaoaprovador}
+        \\[1.31cm]
+        \MakeUppercase{\FonteCorpoDoze \@publicacaoDeAprovacao}
+    \end{minipage}
+    
+    \begin{minipage}[t][.85cm][t]{\textwidth}
+        {
+            \parindent=0pt\relax
+            \FonteCorpoDoze \@nupAprovacao
+        }
+    \end{minipage}
+    
+    \begin{flushright}
+        \parbox{8cm}{\FonteCorpoDoze \@preTxtAto}
+        \\[1.1cm]
+    \end{flushright}
+    
+    \justifying
+    \FonteCorpoDoze
+    \textbf{\MakeUppercase{\@generoAutoridade\hspace{3pt}\@cargoAutoridade}},\hspace{3pt}\@txtAprovacao
+    
+    \justifying
+    \@artTxTAprova
+    
+    %   ASSINATURA AUTORIDADE
+    \begin{minipage}[t][2.3cm][b]{\textwidth}
+        \begin{flushright}
+            \begin{varwidth}{\linewidth}
+                \centering
+                \FonteCorpoDoze
+                \titlecap{\@postoAutoridade} \MakeUppercase{\@nomeAutoridade}
+                \\
+                \titlecap{\@cargoAutoridade}
+            \end{varwidth}
+        \end{flushright}
+    \end{minipage}
+    
+    \vfill
+    
+    {
+        \parindent=0pt\relax
+        \FonteCorpoDoze \@dateAprovacao
+    }
+
 }
 
 
@@ -644,21 +841,32 @@
     }
 
 % Redefinicao do Sumário...
-\renewcommand\tableofcontents{%
+\renewcommand\tableofcontents{
+\cftsetindents{chapter}{0em}{2em}
+\cftsetindents{section}{2em}{3em}
+\cftsetindents{subsection}{5em}{4.2em}
+\cftsetindents{subsubsection}{9.2em}{5em}
+}
+\renewcommand{\cftpartfont}{\sffamily\bfseries\LARGE}
+\renewcommand{\cftchapfont}{\sffamily\bfseries\Large}
+\renewcommand{\cftsecfont}{\sffamily\bfseries}
+\renewcommand{\cftsubsecfont}{\sffamily\bfseries}
+
+%\renewcommand\tableofcontents{% 
     %\begin{spacing}{1.5}   %ita
-    \if@twocolumn
-      \@restonecoltrue\onecolumn
-    \else
-      \@restonecolfalse
-    \fi
-    \chapter*{\MakeUppercase{\contentsname}
-        \pdfbookmark[0]{\namecontents}{contents}
-        \@mkboth{\MakeUppercase{\contentsname}}%
-                 {\MakeUppercase{\contentsname}}}       % Thanks to Reinaldo Fortes
-     \@starttoc{toc}%
-    \if@restonecol\twocolumn\fi
+ %   \if@twocolumn
+ %     \@restonecoltrue\onecolumn
+ %   \else
+ %     \@restonecolfalse
+ %   \fi
+ %   \chapter*{\MakeUppercase{\contentsname}
+ %       \pdfbookmark[0]{\namecontents}{contents}
+ %       \@mkboth{\MakeUppercase{\contentsname}}%
+ %                {\MakeUppercase{\contentsname}}}       % Thanks to Reinaldo Fortes
+ %    \@starttoc{toc}%
+ %   \if@restonecol\twocolumn\fi
     %\end{spacing}   %ita
-    }
+ %   }
 
 % Lista de Símbolos...
 \newcommand\listofsymbols{%
@@ -710,60 +918,22 @@
   }
 
 
-% Thanks to Dr. Alan Wilter Sousa da Silva - alan@lncc.br
-\renewcommand{\addcontentsline}[3]{%
-  \begingroup
-    \let\label\@gobble
-    \let\textlatin\@firstofone
-    \ifx\@currentHref\@empty
-      \Hy@Warning{%
-        No destination for bookmark of \string\addcontentsline,%
-        \MessageBreak destination is added%
-      }%
-      \phantomsection
-    \fi
-    \expandafter\ifx\csname toclevel@#2\endcsname\relax
-      \begingroup
-        \def\Hy@tempa{#1}%
-        \ifx\Hy@tempa\Hy@bookmarkstype
-          \Hy@WarningNoLine{bookmark level for unknown #2 defaults to 0}%
-        \else
-          \Hy@Info{bookmark level for unknown #2 defaults to 0}%
-        \fi
-      \endgroup
-      \expandafter\gdef\csname toclevel@#2\endcsname{0}%
-    \fi
-    \edef\Hy@toclevel{\csname toclevel@#2\endcsname}%
-    \Hy@writebookmark{\csname the#2\endcsname}%
-      {#3}%
-      {\@currentHref}%
-      {\Hy@toclevel}%
-      {#1}%
-    \ifHy@verbose
-      \typeout{pdftex: bookmark at \the\inputlineno:
-        {\csname the#2\endcsname}
-        {#3}
-        {\@currentHref}%
-        {\Hy@toclevel}%
-        {#1}%
-      }%
-    \fi
-    \addtocontents{#1}{%
-      \protect\contentsline{#2}{#3}{\thepage}{\@currentHref}%
-    }%
-  \endgroup
-}
 
 %==============================================================================
 %%% Cabecalhos e Rodapés
 %==============================================================================
+\RequirePackage{lastpage}
 \pagestyle{fancy}
-\lhead{\leftmark}
+\fancyfoot{} 
+\fancyhf{}
+\fancyhead[LO,RE]{\textbf{\@siglaespecie \hspace{1pt} \@numerobasicosecundario/\@anoaprovacao}}
+\fancyhead[RO,LE]{\textbf{\thepage/\pageref{LastPage}}}
+%\lhead{\textbf{\@siglaespecie \hspace{1pt} \@numerobasicosecundario/\@anoaprovacao}}
 \chead{}
-\rhead{\thepage}
+%\rhead{\textbf{\thepage/\pageref{LastPage}}}
 \lfoot{}\cfoot{}\rfoot{}
-\renewcommand{\headrulewidth}{0.5pt}
-\renewcommand{\footrulewidth}{0pt}
+\renewcommand{\headrulewidth}{0pt} % REMOVE LINHA DO HEADDER
+\renewcommand{\footrulewidth}{0pt} % REMOVE LINHA DO FOOTER
 % Imprimir rodape com versao preliminar?
   \if@dv
      \rfoot{\emph{\itadvnamebabel\ \today }}
@@ -987,135 +1157,6 @@
 \renewcommand*\l@table{\TableITA@dottedtocline{1}{0cm}{2.8cm}}
 
 
-%==============================================================================
-% Folha de Registro do Documento
-%==============================================================================
-\newcommand{\esp}{.2cm}
-
-% Definicoes dos valores dos campos do formulario
-\newcommand{\FRDitadata}[1]{\gdef\FRDitadatababel{#1}}
-\newcommand{\FRDitadocnro}[1]{\gdef\FRDitadocnrobabel{#1}}
-\newcommand{\FRDitaorgaointerno}[1]{\gdef\FRDitaorgaointernobabel{#1}}
-\newcommand{\FRDitapalavrasautor}[1]{\gdef\FRDitapalavrasautorbabel{#1}}
-\newcommand{\FRDitapalavrasresult}[1]{\gdef\FRDitapalavrasresultbabel{#1}}
-\newcommand{\FRDitapalavraapresentacao}[1]{\gdef\FRDitapalavraapresentacaobabel{#1}}
-
-\newcommand{\FRDitaresumo}[1]{
-    \gdef\FDRitaabstractcontent{#1}
-}
-
-
-%  Opcoes para: 
-%  Nacional ou Internacional -- N/I
-%  Ostensivo, Reservado, Confidencial ou Secreto -- O/R/S
-\newcommand{\FRDitaOpcoes}[2]{
-      \gdef\N{\ } \gdef\I{\ }      
-      \gdef\O{\ } \gdef\R{\ } \gdef\C{\ } \gdef\S{\ }      
-      
-      \ifthenelse{\equal{#1}{N}}{\gdef\N{\textbf{X}}}{}
-      \ifthenelse{\equal{#1}{I}}{\gdef\I{\textbf{X}}}{}
-      
-      \ifthenelse{\equal{#2}{O}}{\gdef\O{\textbf{X}}}{}
-      \ifthenelse{\equal{#2}{R}}{\gdef\R{\textbf{X}}}{}
-      \ifthenelse{\equal{#2}{S}}{\gdef\S{\textbf{X}}}{}
-}
-
-% Folha de Registro de Documento
-\newcommand{\itaFRD}{
-     
-     \if@openright\cleardoublepage\else\clearpage\fi
-     
-     %Redefinicao das margens ...
-	\setlength{\hoffset}{-1in}        % remove padrão do LaTeX
-	\setlength{\voffset}{-1in}        % remove padrão do LaTeX
-	\setlength{\oddsidemargin}{1cm}   % margem esquerda, páginas ímpares
-	\setlength{\evensidemargin}{1cm}  % margem esquerda, páginas pares
-	\setlength{\topmargin}{3cm}       % margem superior
-	\newlength{\bottommargin}         % margem inferior é deduzida em LaTeX
-	\setlength{\bottommargin}{2cm}    % margem inferior
-	\setlength{\headheight}{0pt}      % altura do cabeçalho
-	\setlength{\headsep}{0pt}         % espaço entre cabeçalho e texto
-	\setlength{\footskip}{0mm}        % espaço entre rodapé e texto
-	\setlength\textheight{            % altura disponível para texto
-		\paperheight-\topmargin-\bottommargin-\headheight-\headsep-\footskip
-	}
-	% margem direita é deduzida em LaTeX... alterando isso...
-	\newlength{\rightmarginn}        
-	\setlength{\rightmarginn}{2cm}    % margem direita
-
-	\setlength\textwidth{             % largura disponível para texto
-		\paperwidth-\oddsidemargin-\rightmarginn
-	}
-
-     \singlespacing
-     \footnotesize
-     \setlength{\baselineskip}{0.1\baselineskip}
-     \setlength{\parskip}{.1em}
-     \setlength{\extrarowheight}{2pt}
-          
-     \lhead{}\rhead{}
-
-     \thispagestyle{empty}
-     \pdfbookmark[0]{\itapagedocregbabel}{bla}    
-     
-     \begin{tabularx}{\textwidth}{|X|X|X|X|}
-	\hline
-	\multicolumn{ 4}{|c|}{} \\
-	\multicolumn{ 4}{|c|}{\normalsize FOLHA DE REGISTRO DO DOCUMENTO} \\
-	\multicolumn{ 4}{|c|}{} \\
-	\hline
-	
-	$^{1.}$ \scriptsize CLASSIFICAÇÃO/TIPO & 
-	$^{2.}$ \scriptsize DATA               & 
-	$^{3.}$ \scriptsize REGISTRO Nº       & 
-	$^{4.}$ \scriptsize Nº DE PÁGINAS             \tabularnewline 
-	
-	\centering{
-		\ifthenelse{\equal{\itaoptionlevel}{tg}}
-				{TC}
-				{\ifthenelse{\equal{\itaoptionlevel}{msc}}
-							{DM}
-							{TD}				
-				}
-	}  & 
-	\centering{\FRDitadatababel}   & 
-	\centering\scriptsize \FRDitadocnrobabel  &  
-	\centering\NumPenultimaPagina                  \tabularnewline[\esp]
-	\hline
-	
-	\multicolumn{ 4}{|p{17cm}|}{$^{5.}$ \scriptsize TÍTULO E SUBTÍTULO:} \\
-	\multicolumn{ 4}{|l|}{\nh{\parbox[b]{.95\textwidth}{\@title}}} \\[\esp]
-	\hline
-	\multicolumn{ 4}{|l|}{$^{6.}$ \scriptsize AUTOR\ifthenelse{\equal{\authorgendermf}{masc}}{}{A}(ES):} \\
-	\multicolumn{ 4}{|l|}{\textbf{\@authorfirst\ \@authorlast}} \\[\esp]
-	\hline
-	\multicolumn{ 4}{|l|}{$^{7.}$ \scriptsize INSTITUIÇÃO(ÕES)/ÓRGÃO(S) 
-	    INTERNO(S)/DIVISÃO(ÕES):} \\
-	\multicolumn{ 4}{|l|}{\FRDitaorgaointernobabel} \\[\esp]
-	\hline
-	\multicolumn{ 4}{|l|}{$^{8.}$ \scriptsize PALAVRAS-CHAVE SUGERIDAS PEL\ifthenelse{\equal{\authorgendermf}{masc}}{O}{A} AUTOR\ifthenelse{\equal{\authorgendermf}{masc}}{}{A}:} \\
-	\multicolumn{ 4}{|p{17cm}|}{\FRDitapalavrasautorbabel} \\[\esp]
-	\hline
-	\multicolumn{ 4}{|l|}{$^{9.}$ \scriptsize PALAVRAS-CHAVE RESULTANTES DE INDEXAÇÃO:} \\
-	\multicolumn{ 4}{|p{17cm}|}{\FRDitapalavrasresultbabel} \\[\esp]
-	\hline
-	\multicolumn{ 4}{|l|}{$^{10.}$ {\scriptsize APRESENTAÇÃO:}  \hfill 
-		(\N) \textbf{Nacional} \ \ \ 
-		(\I) \textbf{Internacional} } \\
-	\multicolumn{ 4}{|p{17cm}|}{\FRDitapalavraapresentacaobabel} \\[\esp]
-	\hline
-	\multicolumn{ 4}{|l|}{$^{11.}$ \scriptsize RESUMO:} \\
-	\multicolumn{ 4}{|c|}{\parbox[t][12cm]{.95\textwidth}{\FDRitaabstractcontent}} \\[\esp]
-	\hline
-	\multicolumn{ 4}{|l|}{$^{12.}$ \scriptsize GRAU DE SIGILO:} \\
-	\multicolumn{ 4}{| l|}{\hspace{2.0cm} (\O) \textbf{OSTENSIVO} \hspace{2.0cm} 
-			       (\R) \textbf{RESERVADO} \hspace{2.0cm} 
-			       (\S) \textbf{SECRETO} \hspace{2.0cm}} \\[\esp]
-	\hline
-     \end{tabularx}  
-     
-}
-
 
 %==============================================================================
 %%% Hack: Retirando a palavra Capitulo mas mantendo Anexo e Apendice...
@@ -1138,23 +1179,4 @@
     \vskip 40\p@
   }}
   
-  
-%==============================================================================
-%%% Obtendo o numero da penultima pagina, visto que a FRD nao é contada ...
-%%% Thanks to Dr. Miguel V. S. Frasson!! :-)
-%==============================================================================
-\def\deixasosegundo#1#2#3!{#2}
-\makeatletter
-\AtBeginDocument{%
-  % se a referencia a ultima pagina nao existe, definir como ??
-  \expandafter\ifx\csname r@LastPage\endcsname\relax
-    \newcommand\NumPenultimaPagina{{\bfseries??}}%
-  \else
-    \newcounter{butlastpage}%
-    \setcounter{butlastpage}{\expandafter\deixasosegundo\r@LastPage!}%
-    \addtocounter{butlastpage}{-1}%
-    \newcommand\NumPenultimaPagina{}%
-    \edef\NumPenultimaPagina{\arabic{butlastpage}}%
-  \fi}
-  
-  
+

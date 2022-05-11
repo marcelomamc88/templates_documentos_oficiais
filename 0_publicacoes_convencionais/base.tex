@@ -8,19 +8,16 @@
 
 \documentclass[msc]{ita}    
  
-\usepackage{ae}
-\usepackage{graphicx}
 \usepackage{epsfig}
 \usepackage{amsmath}
 \usepackage{amssymb} 
 \usepackage{subfig}
 \usepackage{float}
 \usepackage{verbatim}
-\usepackage{ragged2e}
 \usepackage{sidecap}
 \usepackage{longtable}
 \usepackage{multirow}
-\usepackage[table,xcdraw]{xcolor}
+%\usepackage[table,xcdraw]{xcolor}
 \usepackage{lscape}
 \usepackage{array}
 \usepackage{url}
@@ -32,6 +29,9 @@
 \usepackage{makecell}
 \usepackage{alltt}
 \usepackage{rotating}
+
+\usepackage{lipsum}  % LOREN IPSUM
+
 
 
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -72,6 +72,7 @@
 %#################################################################################
 %#################################################################################
 
+
 \begin{document}
 
 \maketitle
@@ -94,12 +95,6 @@
 %#################################################################################
 %#################################################################################
 \mainmatter
- 
-\chapter*{Ato de Aprovação} 
-\input{arquivos/1_ato_aprovacao}
-
-\chapter*{Prefácio} 
-\input{arquivos/3_prefacio}
 
 \input{arquivos/4_texto}
 
@@ -123,7 +118,7 @@
 \appendix
 
 
-\printgtt{altlistgroup}
+%\printgtt{altlistgroup}
 
 
 %#################################################################################
